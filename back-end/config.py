@@ -1,10 +1,12 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from os import path, remove
+from flask_cors import CORS
 
 #os (operacional system) é mais próximo da linguagem de máquina - path (caminho)
 
 app = Flask(__name__) #instância do flask / define como uma aplicação flask
+CORS(app)
 srcpath = path.dirname(path.abspath(__file__)) #srcpath - caminho da fonte, dirname - caminho do nome do diretório, abspath - caminho absoluto do arquivo.
 db_filepath = path.join(srcpath, 'datavase.db') #cainho do arquivo do banco de dados, join - faz junção de dois caminhos (srcpath e datavase)
 
