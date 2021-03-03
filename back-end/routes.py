@@ -1,5 +1,5 @@
 from config import *
-from models import Paciente
+from models import Paciente, Medico, Receita
 
 #primeira rota do servidor
 @app.route("/")
@@ -44,6 +44,28 @@ def excluir_paciente(paciente_id):
     except Exception as e:
         resposta = jsonify({"resultado":"erro", "detalhes":str(e)})
 
+    resposta.headers.add("Access-Control-Allow-Origin", "*")
+
+    return resposta
+
+@app.route("/listar_medicos", methods=["get"]) #retornando dados para o usuário
+def listar_medicos():
+    medicos = db.session.query(Medico).all()
+    medicos_json = [ _.json() for _ in medicos ]
+    #jsonnamento - traduzindo para json
+    resposta = jsonify(medicos_json)
+    # PERMITIR resposta para outras pedidos oriundos de outras tecnologias
+    resposta.headers.add("Access-Control-Allow-Origin", "*")
+
+    return resposta
+
+@app.route("/listar_receitas", methods=["get"]) #retornando dados para o usuário
+def listar_receitas():
+    receitas = db.session.query(Receita).all()
+    receitas_json = [ _.json() for _ in receitas ]
+    #jsonnamento - traduzindo para json
+    resposta = jsonify(receitas_json)
+    # PERMITIR resposta para outras pedidos oriundos de outras tecnologias
     resposta.headers.add("Access-Control-Allow-Origin", "*")
 
     return resposta

@@ -38,7 +38,7 @@ class Medico(db.Model):
             "nome": self.nome,
             "idade": self.idade,
             "email": self.email,
-            "tipo_sanguineo ": self.tipo_sanguineo 
+            "tipo_sanguineo": self.tipo_sanguineo 
         }
 
 

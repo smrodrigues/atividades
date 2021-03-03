@@ -12,7 +12,7 @@ $(function() {
     // ajax é tipo um método do jquery que tem atributos necessários paar fazer requisições em um servidor
         function listarPacientes (pacientes) {
             $("#corpoTabelaPacientes").empty();
-            alterarVisibilidade("tabelaPacientes")
+            alterarVisibilidade("pacientes")
             for (var i in pacientes) { //i vale a posição no vetor
                 novaLinha = `<tr id="linha_${pacientes[i].id}">` + 
                   '<td>' + pacientes[i].nome + '</td>' + 
@@ -29,14 +29,80 @@ $(function() {
         }
     }
 
+    function exibirMedicos() {
+        $.ajax({
+            url: 'http://localhost:5000/listar_medicos',
+            method: 'GET',
+            dataType: 'json', // os dados são recebidos no formato json
+            success: listarMedicos,// chama a função listar para processar o resultado
+            error: function() {
+                alert("Erro ao ler dados! Erro no backend!");
+            }
+        });
+    // ajax é tipo um método do jquery que tem atributos necessários paar fazer requisições em um servidor
+        function listarMedicos (medicos) {
+            $("#corpoTabelaMedicos").empty();
+            alterarVisibilidade("medicos")
+            for (var i in medicos) { //i vale a posição no vetor
+                novaLinha = `<tr id="linha_${medicos[i].id}">` + 
+                  '<td>' + medicos[i].nome + '</td>' + 
+                  '<td>' + medicos[i].idade + '</td>' + 
+                  '<td>' + medicos[i].email + '</td>' + 
+                  '<td>' + medicos[i].tipo_sanguineo + '</td>' + 
+                  '</tr>';
+                // adiciona a linha no corpo da tabela
+                $('#corpoTabelaMedicos').append(novaLinha);
+            }
+        }
+    }
+
+    function exibirReceitas() {
+        $.ajax({
+            url: 'http://localhost:5000/listar_receitas',
+            method: 'GET',
+            dataType: 'json', // os dados são recebidos no formato json
+            success: listarReceitas,// chama a função listar para processar o resultado
+            error: function() {
+                alert("Erro ao ler dados! Erro no backend!");
+            }
+        });
+    // ajax é tipo um método do jquery que tem atributos necessários paar fazer requisições em um servidor
+        function listarReceitas (receitas) {
+            $("#corpoTabelaReceitas").empty();
+            alterarVisibilidade("receitas")
+            for (var i in receitas) { //i vale a posição no vetor
+                novaLinha = `<tr id="linha_${receitas[i].id}">` + 
+                  '<td>' + receitas[i].codigo + '</td>' + 
+                  '<td>' + receitas[i].paciente.nome + '</td>' + 
+                  '<td>' + receitas[i].paciente.idade + '</td>' + 
+                  '<td>' + receitas[i].paciente.email + '</td>' + 
+                  '<td>' + receitas[i].medico.nome + '</td>' + 
+                  '<td>' + receitas[i].medico.idade + '</td>' + 
+                  '<td>' + receitas[i].medico.email + '</td>' + 
+                  '<td>' + receitas[i].medico.tipo_sanguineo + '</td>' + 
+                  '</tr>';
+                // adiciona a linha no corpo da tabela
+                $('#corpoTabelaReceitas').append(novaLinha);
+            }
+        }
+    }
+
     function alterarVisibilidade(identificador) {
-        $("#tabelaPacientes").addClass("d-none");
+        $("#pacientes").addClass("d-none");
+        $("#medicos").addClass("d-none");
+        $("#receitas").addClass("d-none");
         $("#conteudoInicial").addClass("d-none");
         $(`#${identificador}`).removeClass("d-none");
     }
 
     $(document).on("click","#linkListarPacientes", function() {
         exibirPacientes();
+    });
+    $(document).on("click","#linkListarMedicos", function() {
+        exibirMedicos();
+    });
+    $(document).on("click","#linkListarReceitas", function() {
+        exibirReceitas();
     });
 
     $(document).on("click","#linkInicio", function() {
