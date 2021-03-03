@@ -14,10 +14,14 @@ $(function() {
             $("#corpoTabelaPacientes").empty();
             alterarVisibilidade("tabelaPacientes")
             for (var i in pacientes) { //i vale a posição no vetor
-                novaLinha = '<tr>' + 
+                novaLinha = `<tr id="linha_${pacientes[i].id}">` + 
                   '<td>' + pacientes[i].nome + '</td>' + 
                   '<td>' + pacientes[i].idade + '</td>' + 
                   '<td>' + pacientes[i].email + '</td>' + 
+                  `<td><a href=# id="${pacientes[i].id}" class="excluir_paciente">` +
+                        '<p class="badge badge-danger">Excluir</p>' +
+                    '</a>' +
+                  '</td>' +
                   '</tr>';
                 // adiciona a linha no corpo da tabela
                 $('#corpoTabelaPacientes').append(novaLinha);
@@ -83,5 +87,32 @@ $(function() {
         }
     });
 
+    $(document).on("click", ".excluir_paciente", function() {
+        var componente_clicado = $(this).attr('id');
+
+        $.ajax({
+            url: `http://localhost:5000/excluir_paciente/${componente_clicado}`,
+            type: 'DELETE',
+            dataType: 'json',
+            success: excluirPaciente,
+            error: erroAoExcluir
+        });
+
+        function excluirPaciente(retorno) {
+            if (retorno.resultado === "ok") {
+                console.log(retorno);
+                $("#linha_" + componente_clicado).fadeOut(1000, function(){ //fade.out faz desaparecer "lentamente" (1 segundo)
+                    alert("Paciente removido com sucesso!");
+                });
+            } else {
+                alert(retorno.resultado + ":" + retorno.detalhes);
+            }
+        }
+        function erroAoExcluir (retorno) {
+            alert("Erro ao excluir paciente! Erro no Backend! ");
+        }
+    });
+
     alterarVisibilidade("conteudoInicial");
 });
+

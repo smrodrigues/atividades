@@ -34,3 +34,16 @@ def incluir_paciente():
     resposta.headers.add("Access-Control-Allow-Origin", "*")
 
     return resposta
+
+@app.route("/excluir_paciente/<int:paciente_id>", methods=['delete'])
+def excluir_paciente(paciente_id):
+    resposta = jsonify({"resultado": "ok", "detalhes": "ok"})
+    try:
+        Paciente.query.filter(Paciente.id == paciente_id).delete()
+        db.session.commit()
+    except Exception as e:
+        resposta = jsonify({"resultado":"erro", "detalhes":str(e)})
+
+    resposta.headers.add("Access-Control-Allow-Origin", "*")
+
+    return resposta
